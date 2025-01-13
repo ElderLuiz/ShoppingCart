@@ -16,33 +16,7 @@ import model.entities.Product;
 public class CartControllerDAO {
 	
 	
-	//Here i created a method to add a product to the shopping cart
-	    public void addProductToCart(String ProductName, int quantity) {
-        Product product = getProductByName(ProductName);
-        
-        if (product != null) {
-            if (product.getQuantity() >= quantity) {
-                String insertCartSql = "INSERT INTO cart (product_name, quantity) VALUES (?, ?)";
-                try (Connection connection = DatabaseConnection.getConnection();
-                     PreparedStatement insertStatement = connection.prepareStatement(insertCartSql)) {
-                    
-                	insertStatement.setString(1, ProductName);  
-                    insertStatement.setInt(2, quantity);    
-                    insertStatement.executeUpdate();
-                    
-
-                    updateProductStock(ProductName, product.getQuantity() - quantity);
-                    System.out.println("Product added to cart successfully.");
-                } catch (SQLException e) {
-                    throw new DbException("Error adding product to cart: "+e.getMessage());
-                }
-            } else {
-                System.out.println("Not enough stock available.");
-            }
-        } else {
-            System.out.println("Product not found.");
-        }
-    }    
+	 
     // I fixed this, now this method gets the product by name
 	    
     public Product getProductByName(String productName) {
