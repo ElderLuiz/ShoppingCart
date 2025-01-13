@@ -24,6 +24,7 @@ Java 17 (JDK)
 ## Criação das Tabelas
 
 CREATE TABLE stock (
+
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     category VARCHAR(50),
@@ -32,6 +33,7 @@ CREATE TABLE stock (
 );
 
 CREATE TABLE cart (
+
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     category VARCHAR(50),
@@ -42,7 +44,7 @@ CREATE TABLE cart (
 
 ## Produtos para o Banco de Dados
 
-INSERT INTO stock (name, category, price, quantity) VALUES
+INSERT INTO stock (name, category, price, quantity) VALUES 
 ('Laptop', 'Electronics', 4500.00, 10),
 ('Headphones', 'Electronics', 50.00, 15),
 ('Smartphone', 'Electronics', 1200.00, 8),
@@ -61,6 +63,7 @@ INSERT INTO stock (name, category, price, quantity) VALUES
 ('GTA-6', 'Games', 997.00, 1),
 ('Farcry-7', 'Games', 350.00, 3),
 ('Skin Valorant', 'Games', 50.00,10);
+
 
 #### Configuração do Projeto
 1. Clonando o Repositório
