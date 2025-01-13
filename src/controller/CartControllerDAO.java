@@ -42,9 +42,7 @@ public class CartControllerDAO {
         } else {
             System.out.println("Product not found.");
         }
-    }
-
-	    
+    }    
     // I fixed this, now this method gets the product by name
 	    
     public Product getProductByName(String productName) {
@@ -74,6 +72,7 @@ public class CartControllerDAO {
              PreparedStatement statement = connection.prepareStatement(sql)) {
             
             statement.setInt(1, newQuantity);
+          
             statement.setString(2, productName);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -124,15 +123,15 @@ public class CartControllerDAO {
                         resultSet.getDouble("price"),
                         resultSet.getInt("quantity")
                 ));
-            }
+            }         
+            
         } catch (SQLException e) {
             throw new DbException("Error fetching products from stock: " + e.getMessage());
         }
 
         return products;
     }
-
-   
+    
     public void addProductToCart(Cart cartItem) {
         // Here is just to add the product to the Shopping cart in the database
         String sql = "INSERT INTO cart (name, category, price, quantity) VALUES (?, ?, ?, ?)";
@@ -144,11 +143,13 @@ public class CartControllerDAO {
             statement.setDouble(3, cartItem.getPrice());
             statement.setInt(4, cartItem.getQuantity());
             statement.executeUpdate();
+            
         } catch (SQLException e) {
             throw new DbException("Error adding product to cart: "+e.getMessage());
         }
     }
 
+    
     public List<Cart> getAllCartItems() {
         List<Cart> cartItems = new ArrayList<>();
         String sql = "SELECT * FROM cart";
@@ -211,68 +212,4 @@ public class CartControllerDAO {
             throw new DbException("Error removing product from cart: "+e.getMessage());
         }
     }
-    
-/*
-    private boolean isProductInCart(int productId) {
-        String sql = "SELECT * FROM cart WHERE id = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, productId);
-            ResultSet resultSet = statement.executeQuery();
-
-            return resultSet.next();
-        } catch (SQLException e) {
-            System.out.println("Error checking product in cart: " + e.getMessage());
-        }
-
-        return false;
-    }
-
-
-    private void updateProductQuantityInCart(int productId, int newQuantity) {
-        String sql = "UPDATE cart SET quantity = ? WHERE id = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, newQuantity);
-            statement.setInt(2, productId);
-            int rowsAffected = statement.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("Product quantity updated in cart.");
-            } else {
-                System.out.println("Error updating product quantity in cart.");
-            }
-        } catch (SQLException e) {
-            throw new DbException("Error updating product quantity in cart: "+e.getMessage());
-        }
-    }
-
-  
-    
-    // I used this method to obtain the product from stock by ID.
-    private Product getProductFromStock(int productId) {
-        String sql = "SELECT * FROM stock WHERE id = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, productId);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Product(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("category"),
-                        resultSet.getDouble("price"),
-                        resultSet.getInt("quantity")
-                );
-            }
-        } catch (SQLException e) {
-            throw new DbException("Error fetching product from stock: "+e.getMessage());
-        }
-
-        return null;
-    }*/
 }
