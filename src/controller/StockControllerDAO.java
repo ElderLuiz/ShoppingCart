@@ -72,6 +72,7 @@ public class StockControllerDAO {
             
             int rowsUpdated = statement.executeUpdate();
             
+           
             if (rowsUpdated > 0) {
                 System.out.println("Product quantity updated successfully.");
             } else {

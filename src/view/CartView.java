@@ -4,8 +4,10 @@ import controller.CartControllerDAO;
 import model.entities.Cart;
 import model.entities.Product;
 
+
 import java.util.List;
 import java.util.Scanner;
+
 
 public class CartView {
 
@@ -17,9 +19,11 @@ public class CartView {
 	        scanner = new Scanner(System.in);
 	    }
 
-
+	   
+	   
 	    public void displayMenu() {
 	        while (true) {
+	   
 	            System.out.println("\n--- Shopping Cart ---");
 	            System.out.println("1. View Products");
 	            System.out.println("2. Add Product to Cart");
@@ -28,9 +32,9 @@ public class CartView {
 	            System.out.println("5. Calculate Total");
 	            System.out.println("6. Exit");
 	            System.out.print("Choose an option: ");
-
 	            int choice = scanner.nextInt();
 	            scanner.nextLine(); 
+	            
 
 	            switch (choice) {
 	                case 1:
@@ -54,9 +58,10 @@ public class CartView {
 	                default:
 	                    System.out.println("Invalid option, please try again.");
 	            }
+	        	}
 	           
 	            }
-	        }
+	     
 	    
 	    
 
@@ -67,9 +72,7 @@ public class CartView {
         for (int i = 0; i < products.size(); i++) {
             Product product = products.get(i);
             System.out.println(product);
-            /*
-            System.out.println("Product Id: "+(i + 1) + " | " + product.getName() + " - " + product.getCategory() +
-                    " - $" + product.getPrice() + " - Stock: " + product.getQuantity());*/
+           
         }
     }
 
@@ -84,6 +87,7 @@ public class CartView {
         Product selectedProduct = cartController.getProductByName(productName);
 
         if (selectedProduct != null && quantity <= selectedProduct.getQuantity()) {
+        	
             Cart cartItem = new Cart(selectedProduct.getId(), selectedProduct.getName(),
                     selectedProduct.getCategory(), selectedProduct.getPrice(), quantity);
             
@@ -126,4 +130,5 @@ public class CartView {
         CartView cartView = new CartView();
         cartView.displayMenu();
     }
+
 }

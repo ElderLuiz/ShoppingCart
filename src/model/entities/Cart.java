@@ -1,5 +1,7 @@
 package model.entities;
 
+import Exceptions.DbException;
+
 public class Cart {
 
     private int id;
@@ -58,6 +60,7 @@ public class Cart {
     }
 
     public int getQuantity() {
+    	if(quantity < 0)throw new DbException("Error: quantity does't can be less that zero");
         return quantity;
     }
 
@@ -76,8 +79,8 @@ public class Cart {
 
     @Override
     public String toString() {
-        return "Name: " + name + ", Category: " + category +
+        return "Product Name: " + name + ", Category: " + category +
                ", Product Price: " + price + ", Quantity: " + quantity +
-               ", Total Value: " + totalValue + "]";
+               ", Total Value: " + totalValue + "";
     }
 }
