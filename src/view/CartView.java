@@ -75,13 +75,13 @@ public class CartView {
 
 
     private void addProductToCart() {
-        System.out.print("\nEnter product ID to add to cart: ");
-        int productId = scanner.nextInt();
+        System.out.print("\nEnter product Name to add to cart: ");
+        String productName = scanner.nextLine();
         System.out.print("Enter quantity: ");
         int quantity = scanner.nextInt();
         scanner.nextLine(); 
 
-        Product selectedProduct = cartController.getProductById(productId);
+        Product selectedProduct = cartController.getProductByName(productName);
 
         if (selectedProduct != null && quantity <= selectedProduct.getQuantity()) {
             Cart cartItem = new Cart(selectedProduct.getId(), selectedProduct.getName(),
@@ -108,11 +108,11 @@ public class CartView {
     }
 
     private void removeProductFromCart() {
-        System.out.print("\nEnter cart ID of the product to remove: ");
-        int cartId = scanner.nextInt();
-        scanner.nextLine();
+        System.out.print("\nEnter cart Name of the product to remove: ");
+        String cartName = scanner.nextLine();
+     
 
-        cartController.removeProductFromCart(cartId);
+        cartController.removeProductFromCart(cartName);
     }
 
   
