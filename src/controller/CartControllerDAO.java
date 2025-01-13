@@ -17,21 +17,21 @@ public class CartControllerDAO {
 	
 	
 	//Here i created a method to add a product to the shopping cart
-	    public void addProductToCart(int productId, int quantity) {
-        Product product = getProductById(productId);
+	    public void addProductToCart(String ProductName, int quantity) {
+        Product product = getProductByName(ProductName);
         
         if (product != null) {
             if (product.getQuantity() >= quantity) {
-                String insertCartSql = "INSERT INTO cart (product_id, quantity) VALUES (?, ?)";
+                String insertCartSql = "INSERT INTO cart (product_name, quantity) VALUES (?, ?)";
                 try (Connection connection = DatabaseConnection.getConnection();
                      PreparedStatement insertStatement = connection.prepareStatement(insertCartSql)) {
                     
-                    insertStatement.setInt(1, productId);  
+                	insertStatement.setString(1, ProductName);  
                     insertStatement.setInt(2, quantity);    
                     insertStatement.executeUpdate();
                     
 
-                    updateProductStock(productId, product.getQuantity() - quantity);
+                    updateProductStock(ProductName, product.getQuantity() - quantity);
                     System.out.println("Product added to cart successfully.");
                 } catch (SQLException e) {
                     throw new DbException("Error adding product to cart: "+e.getMessage());
@@ -45,22 +45,21 @@ public class CartControllerDAO {
     }
 
 	    
-    // This method I did is to obtain a product by ID
+    // I fixed this, now this method gets the product by name
 	    
-    public Product getProductById(int productId) {
-        String sql = "SELECT * FROM stock WHERE id = ?";
+    public Product getProductByName(String productName) {
+        String sql = "SELECT * FROM stock WHERE name = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             
-            statement.setInt(1, productId);
+            statement.setString(1, productName);
             ResultSet resultSet = statement.executeQuery();
             
             if (resultSet.next()) {
-                String name = resultSet.getString("name");
                 String category = resultSet.getString("category");
                 double price = resultSet.getDouble("price");
                 int quantity = resultSet.getInt("quantity");
-                return new Product(productId, name, category, price, quantity);
+                return new Product(productName,category, price, quantity);
             }
         } catch (SQLException e) {
             throw new DbException("Error fetching product: "+e.getMessage());
@@ -68,35 +67,35 @@ public class CartControllerDAO {
         return null;
     }
 
-    private void updateProductStock(int productId, int newQuantity) {
-        String sql = "UPDATE stock SET quantity = ? WHERE id = ?";
+    private void updateProductStock(String productName, int newQuantity) {
+        String sql = "UPDATE stock SET quantity = ? WHERE name = ?";
         
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             
             statement.setInt(1, newQuantity);
-            statement.setInt(2, productId);
+            statement.setString(2, productName);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DbException("Error updating stock: "+e.getMessage());
         }
     }
 
-    public void removeProductFromCart(int productId, int quantity) {
-        String deleteCartSql = "DELETE FROM cart WHERE product_id = ? AND quantity = ?";
+    public void removeProductFromCart(String productName, int quantity) {
+        String deleteCartSql = "DELETE FROM cart WHERE product_name = ? AND quantity = ?";
         
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement deleteStatement = connection.prepareStatement(deleteCartSql)) {
         
-            deleteStatement.setInt(1, productId);
+            deleteStatement.setString(1, productName);
             deleteStatement.setInt(2, quantity);
             int rowsAffected = deleteStatement.executeUpdate();
             
             if (rowsAffected > 0) {
-                Product product = getProductById(productId);
+                Product product = getProductByName(productName);
                 if (product != null) {
                     int newQuantity = product.getQuantity() + quantity;
-                    updateProductStock(productId, newQuantity);
+                    updateProductStock(productName, newQuantity);
                     System.out.println("Product removed from cart and stock updated.");
                 }
             } else {
@@ -195,12 +194,12 @@ public class CartControllerDAO {
 	
 
 
-    public void removeProductFromCart(int productId) {
-        String sql = "DELETE FROM cart WHERE id = ?";
+    public void removeProductFromCart(String cartName) {
+        String sql = "DELETE FROM cart WHERE name = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, productId);
+            statement.setString(1, cartName);
             int rowsAffected = statement.executeUpdate();
 
             if (rowsAffected > 0) {
