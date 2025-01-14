@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 import controller.StockControllerDAO;
 
-import Exceptions.DbException;
 import controller.CartControllerDAO;
 import model.entities.Cart;
 import model.entities.Product;
@@ -62,7 +61,9 @@ public class CartView {
 	                    System.out.println("Invalid option, please try again.");
 	            }
 	        	}catch (InputMismatchException e) {
-					throw new DbException("");
+	        		System.out.println("This Character is invalid.");
+	        		System.out.println("Pls Type it again. ");
+	        		scanner.nextLine(); 
 				}
 	            
 	        	}
