@@ -61,14 +61,15 @@ public class StockControllerDAO {
             throw new DbException("Error adding product to stock: " + e.getMessage());
         }
     }
-    public void removeProductFromStock(int productId, int quantityToRemove) {
-        String query = "UPDATE stock SET quantity = quantity - ? WHERE id = ?";
+    
+    public void removeProductFromStock(String productName, int quantityToRemove) {
+        String query = "UPDATE stock SET quantity = quantity - ? WHERE name = ?";
         
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             
             statement.setInt(1, quantityToRemove);
-            statement.setInt(2, productId);
+            statement.setString(2, productName);
             
             int rowsUpdated = statement.executeUpdate();
             

@@ -1,18 +1,21 @@
 package view;
 
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+import controller.StockControllerDAO;
+
+import Exceptions.DbException;
 import controller.CartControllerDAO;
 import model.entities.Cart;
 import model.entities.Product;
 
 
-import java.util.List;
-import java.util.Scanner;
-
-
 public class CartView {
+	private static final StockControllerDAO stockController = new StockControllerDAO();
 
-	 private CartControllerDAO cartController;
-	    private Scanner scanner;
+	 private static CartControllerDAO cartController;
+	    private static Scanner scanner;
 
 	    public CartView() {
 	        cartController = new CartControllerDAO();
@@ -23,7 +26,7 @@ public class CartView {
 	   
 	    public void displayMenu() {
 	        while (true) {
-	   
+	        	try {
 	            System.out.println("\n--- Shopping Cart ---");
 	            System.out.println("1. View Products");
 	            System.out.println("2. Add Product to Cart");
@@ -41,7 +44,7 @@ public class CartView {
 	                    viewProducts();
 	                    break;
 	                case 2:
-	                    addProductToCart();
+	                	addProductToCart();
 	                    break;
 	                case 3:
 	                    viewCart();
@@ -58,6 +61,10 @@ public class CartView {
 	                default:
 	                    System.out.println("Invalid option, please try again.");
 	            }
+	        	}catch (InputMismatchException e) {
+					throw new DbException("");
+				}
+	            
 	        	}
 	           
 	            }
@@ -75,28 +82,25 @@ public class CartView {
            
         }
     }
-
-
-    private void addProductToCart() {
-        System.out.print("\nEnter product Name to add to cart: ");
+    private static void addProductToCart() {
+        System.out.print("Enter Product Name to Add: ");
         String productName = scanner.nextLine();
-        System.out.print("Enter quantity: ");
-        int quantity = scanner.nextInt();
+        System.out.print("Enter Quantity to Add: ");
+        int quantityToRemove = scanner.nextInt();
         scanner.nextLine(); 
-
         Product selectedProduct = cartController.getProductByName(productName);
-
-        if (selectedProduct != null && quantity <= selectedProduct.getQuantity()) {
-        	
-            Cart cartItem = new Cart(selectedProduct.getId(), selectedProduct.getName(),
-                    selectedProduct.getCategory(), selectedProduct.getPrice(), quantity);
-            
-            cartController.addProductToCart(cartItem);
-            System.out.println("Product added to cart!");
-        } else {
-            System.out.println("Invalid quantity or product not found.");
-        }
+        
+        if (selectedProduct != null && quantityToRemove <= selectedProduct.getQuantity()) {
+        
+        Cart cartItem = new Cart(selectedProduct.getId(), selectedProduct.getName(),
+                selectedProduct.getCategory(), selectedProduct.getPrice(), quantityToRemove);
+        cartController.addProductToCart(cartItem);
+        stockController.removeProductFromStock(productName, quantityToRemove);
+        System.out.println("Product added to cart!");
+    } else {
+        System.out.println("Invalid quantity or product not found.");
     }
+        }
 
 
     private void viewCart() {
@@ -112,7 +116,7 @@ public class CartView {
     }
 
     private void removeProductFromCart() {
-        System.out.print("\nEnter cart Name of the product to remove: ");
+        System.out.print("\nEnter Name of the product to remove: ");
         String cartName = scanner.nextLine();
      
 

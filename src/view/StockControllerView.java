@@ -75,16 +75,15 @@ public class StockControllerView {
 	        }
 	    }
 
-
 	    private static void removeProductFromStock() {
-	        System.out.print("Enter Product Id to Remove: ");
-	        int productId = scanner.nextInt();
+	        System.out.print("Enter Product Name to Remove: ");
+	        String productName = scanner.nextLine();
 	        scanner.nextLine();  
 	        System.out.print("Enter Quantity to Remove: ");
 	        int quantityToRemove = scanner.nextInt();
 	        scanner.nextLine(); 
 
-	        stockController.removeProductFromStock(productId, quantityToRemove);
+	        stockController.removeProductFromStock(productName, quantityToRemove);
 	    }
 
 	    public static void main(String[] args) {
