@@ -1,6 +1,8 @@
 package view;
 
 import controller.StockControllerDAO;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class StockControllerView {
@@ -11,6 +13,7 @@ public class StockControllerView {
 
 	    public static void showMenu() {
 	        while (true) {
+	        	try {
 	            System.out.println("\n--- Stock Management Menu ---");
 	            System.out.println("1. View Stock");
 	            System.out.println("2. Add Product to Stock");
@@ -40,6 +43,11 @@ public class StockControllerView {
 	                default:
 	                    System.out.println("Invalid option. Please try again.");
 	            }
+	        	}catch (InputMismatchException e) {
+	        		System.out.println("This Character is invalid.");
+	        		System.out.println("Pls Type it again. ");
+	        		scanner.nextLine(); 
+				}
 	        }
 	    }
 
